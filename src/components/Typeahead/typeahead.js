@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Children } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { rgba } from 'polished';
 import Loading from '../Loading/loading';
 import CloseIcon from '../Icons/close';
 import { colors } from '../../constants';
-
+import { debounce } from 'lodash';
 /*
 <Typeahead>Wadus</Typeahead>
 */
@@ -59,45 +59,91 @@ const StyledInput = styled.div`
   }
 `;
 
-class Typeahead extends Component {
+class Fetcher extends Component {
   state = {
-    query: this.props.query
+    loading: false,
+    results: []
   };
 
-  componentWillReceiveProps(next) {
-    if (next.query !== this.state.query) {
-      this.setState({ query: next.query });
+  onChange = (query) => {
+    if (query === '') {
+      return;
+    }
+
+    const { url, transform } = this.props;
+    const endpoint = url(query);
+
+    this.setState({
+      loading: true
+    });
+
+    fetch(endpoint)
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          loading: false,
+          results: transform(data)
+        });
+      })
+      .catch((e) => console.error(e));
+  };
+
+  render() {
+    const { children } = this.props;
+    const { loading, results } = this.state;
+
+    return Children.map(children, (child) => {
+      return React.cloneElement(child, {
+        onChange: this.onChange,
+        loading,
+        results
+      });
+    });
+  }
+}
+
+class Typeahead extends Component {
+  static Search = Fetcher;
+
+  state = {
+    query: '',
+    results: []
+  };
+
+  componentWillReceiveProps(props) {
+    if (props.results !== this.state.results) {
+      this.setState({ results: props.results });
     }
   }
 
-  reset = (e) => {
-    const { onChange } = this.props;
-    this.setState(
-      (state) => {
-        return { ...state, query: '' };
-      },
-      () => {
-        onChange && onChange({ query: '' });
-      }
-    );
-  };
-
-  onChange = (e) => {
-    const { onChange } = this.props;
-    const query = e.target.value;
+  update = (query) => {
     this.setState(
       (state) => {
         return { ...state, query };
       },
       () => {
-        onChange && onChange({ query });
+        this.debounced({ query });
       }
     );
   };
 
+  reset = (e) => {
+    this.setState({ query: '', results: [] });
+  };
+
+  debounced = debounce(({ query }) => {
+    const { onChange } = this.props;
+    onChange && onChange(query);
+  }, 300);
+
+  onChange = (e) => {
+    const query = e.target.value;
+    this.update(query);
+  };
+
   render() {
-    const { loading, results, size, placeholder } = this.props;
-    const { query } = this.state;
+    const { loading, size, placeholder } = this.props;
+    const { query, results } = this.state;
 
     const getIcon = () => {
       if (loading) {
@@ -121,6 +167,14 @@ class Typeahead extends Component {
           />
           {getIcon()}
         </StyledInput>
+
+        {results.length > 0 ? (
+          <ul>
+            {results.map((result, index) => {
+              return <li key={`${result}_${index}`}>{result}</li>;
+            })}
+          </ul>
+        ) : null}
       </StyledTypeahead>
     );
   }

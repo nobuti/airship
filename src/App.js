@@ -620,9 +620,16 @@ class App extends Component {
         </div>
 
         <div style={{ padding: '20px' }}>
-          <Typeahead />
-          <Typeahead query="wadus" />
-          <Typeahead loading />
+          <Typeahead.Search
+            transform={(data) => {
+              return data.map((item) => item.show.name);
+            }}
+            url={(query) =>
+              'http://api.tvmaze.com/search/shows?q=%'.replace(/%/, query)
+            }
+          >
+            <Typeahead />
+          </Typeahead.Search>
         </div>
       </div>
     );
