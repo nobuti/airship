@@ -62,7 +62,7 @@ const StyledInput = styled.div`
 class Fetcher extends Component {
   state = {
     loading: false,
-    results: []
+    results: this.props.results || []
   };
 
   onChange = (query) => {
@@ -101,6 +101,7 @@ class Fetcher extends Component {
     });
   }
 }
+Fetcher.displayName = 'Typeahead.Fetch';
 
 Fetcher.propTypes = {
   transform: PropTypes.func.isRequired,
@@ -112,12 +113,16 @@ class Typeahead extends Component {
 
   state = {
     query: '',
-    results: []
+    results: this.props.results || [],
+    empty: false
   };
 
   componentWillReceiveProps(props) {
     if (props.results !== this.state.results) {
-      this.setState({ results: props.results });
+      this.setState({
+        results: props.results,
+        empty: !props.loading && props.results.length === 0
+      });
     }
   }
 
@@ -133,7 +138,7 @@ class Typeahead extends Component {
   };
 
   reset = (e) => {
-    this.setState({ query: '', results: [] });
+    this.setState({ query: '', results: [], empty: false });
   };
 
   debounced = debounce(({ query }) => {
@@ -148,7 +153,7 @@ class Typeahead extends Component {
 
   render() {
     const { loading, size, placeholder } = this.props;
-    const { query, results } = this.state;
+    const { query, results, empty } = this.state;
 
     const getIcon = () => {
       if (loading) {
@@ -161,6 +166,8 @@ class Typeahead extends Component {
         </button>
       ) : null;
     };
+
+    const hasResults = results.length > 0;
 
     return (
       <StyledTypeahead size={size}>
@@ -180,6 +187,8 @@ class Typeahead extends Component {
             })}
           </ul>
         ) : null}
+
+        {empty ? <div>No results</div> : null}
       </StyledTypeahead>
     );
   }

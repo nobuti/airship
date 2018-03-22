@@ -627,6 +627,18 @@ class App extends Component {
             url={(query) =>
               'http://api.tvmaze.com/search/shows?q=%'.replace(/%/, query)
             }
+            results={[
+              'New Girl',
+              'Lost Girl',
+              'Our Girl',
+              'Gossip Girl',
+              'The Whirlwind Girl',
+              'The Wrong Girl',
+              'Samurai Girl',
+              'Girl Code',
+              '3D Kanojo Real Girl',
+              'Girl Cops'
+            ]}
           >
             <Typeahead />
           </Typeahead.Search>
