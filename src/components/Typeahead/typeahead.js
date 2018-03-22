@@ -102,6 +102,11 @@ class Fetcher extends Component {
   }
 }
 
+Fetcher.propTypes = {
+  transform: PropTypes.func.isRequired,
+  url: PropTypes.func.isRequired
+};
+
 class Typeahead extends Component {
   static Search = Fetcher;
 
