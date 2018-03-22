@@ -59,7 +59,7 @@ const StyledInput = styled.div`
   }
 `;
 
-class Fetcher extends Component {
+class Fetch extends Component {
   state = {
     loading: false,
     results: this.props.results || []
@@ -101,15 +101,15 @@ class Fetcher extends Component {
     });
   }
 }
-Fetcher.displayName = 'Typeahead.Fetch';
+Fetch.displayName = 'Typeahead.Fetch';
 
-Fetcher.propTypes = {
+Fetch.propTypes = {
   transform: PropTypes.func.isRequired,
   url: PropTypes.func.isRequired
 };
 
 class Typeahead extends Component {
-  static Search = Fetcher;
+  static Fetch = Fetch;
 
   state = {
     query: '',

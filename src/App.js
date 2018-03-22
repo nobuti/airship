@@ -620,7 +620,7 @@ class App extends Component {
         </div>
 
         <div style={{ padding: '20px' }}>
-          <Typeahead.Search
+          <Typeahead.Fetch
             transform={(data) => {
               return data.map((item) => item.show.name);
             }}
@@ -641,7 +641,7 @@ class App extends Component {
             ]}
           >
             <Typeahead />
-          </Typeahead.Search>
+          </Typeahead.Fetch>
         </div>
       </div>
     );
