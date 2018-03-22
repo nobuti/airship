@@ -4,13 +4,17 @@ import PropTypes from 'prop-types';
 import { rgba } from 'polished';
 import Loading from '../Loading/loading';
 import CloseIcon from '../Icons/close';
-import { colors } from '../../constants';
+import { colors, shadows } from '../../constants';
 import { debounce } from 'lodash';
 /*
 <Typeahead>Wadus</Typeahead>
 */
 
-const StyledTypeahead = styled.div``;
+const StyledTypeahead = styled.div`
+  border-radius: 4px;
+  box-shadow: ${(props) => (!!props.hasResults ? shadows.shadow16 : 'none')};
+`;
+
 const StyledInput = styled.div`
   position: relative;
   border-radius: 4px;
