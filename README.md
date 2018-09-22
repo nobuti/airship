@@ -11,10 +11,10 @@ Carto solutions framework using a super minimal and basic boilerplate.
 
 * `git clone https://github.com/cartoDB/airship.git`
 * `cd airship`
-* `npm install` - get everything to run the project
-* `npm start` - run the project... wait a few seconds
+* `npm install` or `yarn` - get everything to run the project
+* `npm start` or `yarn start` - run the project... wait a few seconds
 * A tab on Chrome should open - **http://localhost:3000/**
-* `npm run styleguide` - run the documentation
+* `npm run styleguide` or `yarn styleguide` - run the documentation
 
 ## Before you start
 
